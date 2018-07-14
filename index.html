@@ -1,0 +1,92 @@
+<html>
+  <head>
+    <title>Overwatch League Jersey Generator</title>
+    <!-- JQUERY -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <!-- BOOTSTRAP -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous"/>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <!-- BOOTSTRAP-SELECT -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+    <style>
+      .row {
+        height: 100%;
+      }
+      #picker-menu {
+        background-color: rgba(0,0,0,0.5);
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      // HOME: 0, AWAY: 1
+      const AWAY_START = 47, HOME_START = 59;
+      var teams = [
+        "Boston Uprising", "Dallas Fuel", "Florida Mayhem", "Houston Outlaws",
+        "London Spitfire", "Los Angeles Gladiators", "Los Angeles Valiant", "New York Excelsior",
+        "Philadelphia Fusion", "San Francisco Shock", "Seoul Dynasty", "Shanghai Dragons"
+      ];
+      var getLinks = function (team, name, number, homeAway) {
+        let start = homeAway ? HOME_START : AWAY_START;
+        let prodId = start + teams.indexOf(team);
+        let bgn = `http://intotheam.liquifire.com/intotheam?set=customName[${encodeURIComponent(name)}],` +
+              `customNumber[${encodeURIComponent(number)}],prodID[AM18${encodeURIComponent(prodId)}-32_`;
+        let end = '],version[web],preview[back]&call=url[file:/INTO%20THE%20AM/Web/global]&scale=size[500]&sink';
+        return [
+          bgn + 'back' + end,
+          bgn + 'front' + end
+        ];
+      };
+    </script>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-8 d-inline my-5" id="jerseys">
+            <img src="http://intotheam.liquifire.com/intotheam?set=customName[YOUR%20NAME],customNumber[00],prodID[AM1864-32_front],version[web],preview[back]&call=url[file:/INTO%20THE%20AM/Web/global]&scale=size[500]&sink" class="my-5" id="jersey-front"/>
+            <img src="http://intotheam.liquifire.com/intotheam?set=customName[YOUR%20NAME],customNumber[00],prodID[AM1852-32_back],version[web],preview[back]&call=url[file:/INTO%20THE%20AM/Web/global]&scale=size[500]&sink" class="my-5" id="jersey-back"/>
+        </div>
+        <div class="col-md-4" id="picker-menu">
+          <div class="mx-3" style="margin-top: 40%;">
+            <center><h5 class="w-100">FabeGabe's</h5>
+            <h4 class="w-100">Overwatch League&trade; Jersey Previewer</h4></center>
+          </div><br>
+          <div class="mx-5" id="picker-items">
+            <input type="text" class="form-control" id="name" placeholder="Name"/><br/>
+            <input type="number" class="form-control" id="number" maxlength="2" min="0" max="99" placeholder="#"/><br/>
+            <select class="form-control" id="picker"></select><br/>
+            <div class="ml-5">
+              Type: &nbsp;
+              <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="homeAway" value="true" checked>
+                  <label class="form-check-label">Home</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="homeAway" value="false">
+                <label class="form-check-label" for="inlineRadio2">Away</label>
+              </div>
+            </div><br/>
+            <button type="button" class="form-control btn btn-success" id="previewBtn">Preview</button>
+            <script>
+              let i = 0;
+              teams.forEach(function (t) {
+                $('#picker').append(`<option data-team="${t}">${t}</option>`);
+                i++;
+              });
+              $('#previewBtn').click(function (e) {
+                let team = $('#picker').find(":selected").attr('data-team');
+                let name = $('#name').val();
+                let number = $('#number').val();
+                let homeAway = $('input[name=homeAway]:checked').val();
+                let links = getLinks(team, name, number, homeAway);
+                $('#jersey-back').attr('src', links[0]);
+                $('#jersey-front').attr('src', links[1]);
+              });
+            </script>
+          </div>
+          <div class="mx-5 mt-5"><center><a href="https://twitter.com/xFabeGabe">Follow me on Twitter.</a></center></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
